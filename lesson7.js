@@ -6,7 +6,7 @@ var BARRIER_INTERVAL = 3000; // Интервал между падением к�
 var snake = []; // Сама змейка
 var direction = 'y+'; // Напрвление движения змейки
 var oldDirection = 'y+'; // Старое напрвление движения змейки
-var gameIsRunnig = false; // Запущениа ли игра
+var gameIsRunning = false; // Запущениа ли игра
 var snake_timer; // Таймер змейки
 var barrier_timer; // Таймер камнепада
 var score = 0; // Результат
@@ -56,7 +56,7 @@ function prepareGameField() {
  */
 function startGame() {
     // Игра началась
-    gameIsRunnig = true;
+    gameIsRunning = true;
     // Сброс предыдущей игры
     direction = 'y+'; // Напрвление движения змейки
     oldDirection = 'y+'; // Старое напрвление движения змейки
@@ -113,18 +113,20 @@ function move() {
     // Определяем новую точку
     switch (direction) {
         case 'x-':
-            new_unit = document.querySelector('.cell-' + (coord_y) + '-' + (coord_x -= 1));
+            coord_x = (coord_x === 0) ? (FIELD_SIZE_X - 1) : (coord_x - 1);
             break;
         case 'x+':
-            new_unit = document.querySelector('.cell-' + (coord_y) + '-' + (coord_x += 1));
+            coord_x = (coord_x === (FIELD_SIZE_X - 1)) ? 0 : (coord_x + 1);
             break;
         case 'y-':
-            new_unit = document.querySelector('.cell-' + (coord_y += 1) + '-' + (coord_x));
+            coord_y = (coord_y === (FIELD_SIZE_Y - 1)) ? 0 : (coord_y + 1);
             break;
         case 'y+':
-            new_unit = document.querySelector('.cell-' + (coord_y -= 1) + '-' + (coord_x));
+            coord_y = (coord_y === 0) ? (FIELD_SIZE_Y - 1) : (coord_y - 1);
             break;
     }
+    new_unit = document.querySelector('.cell-' + (coord_y) + '-' + (coord_x));
+
     // Проверка что new_unit не часть змейки и не выход за границы
     if (snake.indexOf(new_unit) === -1 && new_unit !== null && !new_unit.classList.contains('barrier-unit')) {
         // Добавление новой части змейки
@@ -231,7 +233,7 @@ function changeDirection(e) {
  * Функция завершения игры
  */
 function finishGame() {
-    gameIsRunnig = false;
+    gameIsRunning = false;
     clearInterval(snake_timer);
     clearInterval(barrier_timer);
     alert('Вы проиграли!\nВаш результат: ' + score.toString());
